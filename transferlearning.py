@@ -12,7 +12,7 @@ class TransferLearning:
         self.gravity_change = gravity_change
         self.gamma = gamma # Discount factor of reward func
         self.alpha = alpha # Learning rate of DDPG
-        self.epochs = 100
+        self.epochs = 5
         self.steps_train = 1000
         self.steps_eval = 100
         self.timesteps = 0
@@ -66,14 +66,15 @@ class TransferLearning:
                 list_g[k].append(reward_g)
                 sum_steps.append(self.timesteps)
         fig, ax = plt.subplots()
-        ax.plot(sum_steps, np.max(list_no, axis=0))
-        ax.plot(sum_steps, np.mean(list_no, axis=0))
-        ax.plot(sum_steps, np.min(list_no, axis=0))
-        ax.plot(sum_steps, np.max(list_g, axis=0))
-        ax.plot(sum_steps, np.mean(list_g, axis=0))
-        ax.plot(sum_steps, np.min(list_g, axis=0))
-        ax.set(xlabel='timesteps', ylabel='rewards',
-                title='Evalute rewards over timesteps')
+        L1, = ax.plot(sum_steps, np.mean(list_no, axis=0))
+        L2, = ax.plot(sum_steps, np.mean(list_g, axis=0))
+        plt.fill_between(sum_steps, np.max(list_no, axis=0), np.min(list_no, axis=0),
+                         facecolor='green', edgecolor='black', alpha=0.3)
+        plt.fill_between(sum_steps, np.max(list_g, axis=0), np.min(list_g, axis=0),
+                         facecolor='red', edgecolor='black', alpha=0.3)
+        plt.legend([L1, L2], ['Evaluate without change', 'Evaluate with gravity change'], loc=4)
+        ax.set(xlabel='Timesteps', ylabel='Mean rewards',
+                title='Evalute Rewards Over Timesteps')
         ax.grid()
         fig.savefig("test.png")
         plt.show()
