@@ -72,12 +72,12 @@ if __name__ == "__main__":
     L1, = ax.plot(test.sum_steps, np.mean(test.list_no, axis=0))
     L2, = ax.plot(test.sum_steps, np.mean(test.list_g, axis=0))
     plt.fill_between(test.sum_steps, np.max(test.list_no, axis=0), np.min(test.list_no, axis=0),
-                     facecolor='green', edgecolor='black', alpha=0.3)
+                     facecolor="green", edgecolor="black", alpha=0.3)
     plt.fill_between(test.sum_steps, np.max(test.list_g, axis=0), np.min(test.list_g, axis=0),
-                     facecolor='red', edgecolor='black', alpha=0.3)
-    plt.legend([L1, L2], ['Evaluate without change', 'Evaluate with gravity change'], loc=4)
-    ax.set(xlabel='Timesteps', ylabel='Mean rewards',
-           title='Evalute Rewards Over Timesteps')
+                     facecolor="red", edgecolor="black", alpha=0.3)
+    plt.legend([L1, L2], ["Evaluate without change", "Evaluate with gravity change"], loc=4)
+    ax.set(xlabel="Timesteps", ylabel="Mean rewards",
+           title="Evalute Rewards Over Timesteps")
     ax.grid()
     fig.savefig("test.png")
     plt.show()
