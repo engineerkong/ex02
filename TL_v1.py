@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from stable_baselines3 import DDPG
 from stable_baselines3.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
-class TransferLearning:
+class TL:
 
     def __init__(self, gravity_change, gamma, alpha):
         self.gravity = 10.0
@@ -65,8 +65,8 @@ class TransferLearning:
 
 
 if __name__ == "__main__":
-    test = TransferLearning(gravity_change=20.0,gamma=0.99,alpha=1e-3)
-    TransferLearning.learn(test)
+    test = TL(gravity_change=20.0,gamma=0.99,alpha=1e-3)
+    TL.learn(test)
 
     fig, ax = plt.subplots()
     L1, = ax.plot(test.sum_steps, np.mean(test.list_no, axis=0))

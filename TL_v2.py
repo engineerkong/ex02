@@ -62,7 +62,7 @@ class TL:
 
     def train_eval(self):
         """
-        Do the training and evaluation loops for each seeds and gravity changes.
+        Do the training-evaluation loops for each seeds and gravity changes.
         """
         self._setup_trainenv()
         self.results_list = [[] for i in range(len(self.gravity_list))]
