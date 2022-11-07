@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from stable_baselines3 import DDPG
 from stable_baselines3.common.callbacks import EvalCallback
 
+
 class TL:
     """
     A Transferlearning class by implementing RL on gym environment.
@@ -38,14 +39,14 @@ class TL:
     def __init__(self, gravity_list, seeds):
         self.gravity_list = gravity_list
         self.seeds = seeds
-        self.gamma = 0.99 # Discount factor of reward func
-        self.alpha = 1e-3 # Learning rate of DDPG
+        self.gamma = 0.99  # Discount factor of reward func
+        self.alpha = 1e-3  # Learning rate of DDPG
         self.sum_episodes = 5000
         self.eval_episodes = 100
         self.eval_freq = 1000
 
     def _setup_trainenv(self):
-        """"
+        """
         Set up the training environment using the default gravity(10.0).
         """
         self.env_train = gym.make("Pendulum-v1")
@@ -74,15 +75,20 @@ class TL:
                 seed = self.seeds[k]
                 self.env_train.seed(self.seeds[k])
                 self.env_eval.seed(self.seeds[k])
-                eval_callback = EvalCallback(self.env_eval, best_model_save_path=f"./gravity_{gravity}/seed_{seed}/",
-                                             log_path=f"./gravity_{gravity}/seed_{seed}/",
-                                             n_eval_episodes=self.eval_episodes, eval_freq=self.eval_freq,
-                                             deterministic=True, render=False)
+                eval_callback = EvalCallback(
+                    self.env_eval,
+                    best_model_save_path=f"./gravity_{gravity}/seed_{seed}/",
+                    log_path=f"./gravity_{gravity}/seed_{seed}/",
+                    n_eval_episodes=self.eval_episodes,
+                    eval_freq=self.eval_freq,
+                    deterministic=True,
+                    render=False,
+                )
 
                 model = DDPG("MlpPolicy", self.env_train)
                 model.learn(5000, callback=eval_callback)
                 results = np.load(f"./gravity_{gravity}/seed_{seed}/evaluations.npz")
-                self.results_list[j].append(np.mean(results["results"],axis=1))
+                self.results_list[j].append(np.mean(results["results"], axis=1))
                 self.results_timesteps = results["timesteps"]
 
     def plot(self):
@@ -96,19 +102,30 @@ class TL:
         plt_list = []
         legend_list = []
         for i in range(len(self.gravity_list)):
-            L, = ax.plot(self.results_timesteps, np.mean(self.results_list[i], axis=0))
+            (L,) = ax.plot(
+                self.results_timesteps, np.mean(self.results_list[i], axis=0)
+            )
             plt_list.append(L)
             legend_list.append(f"Evaluate with gravity {self.gravity_list[i]}")
             i_color = i % len(color_list)
-            plt.fill_between(self.results_timesteps, np.max(self.results_list[i], axis=0),
-                             np.min(self.results_list[i], axis=0), facecolor=color_list[i_color], edgecolor="black",
-                             alpha=0.3)
+            plt.fill_between(
+                self.results_timesteps,
+                np.max(self.results_list[i], axis=0),
+                np.min(self.results_list[i], axis=0),
+                facecolor=color_list[i_color],
+                edgecolor="black",
+                alpha=0.3,
+            )
         plt.legend(plt_list, legend_list, loc=4)
-        ax.set(xlabel="Timesteps", ylabel="Mean rewards",
-               title="Evalute Rewards Over Timesteps")
+        ax.set(
+            xlabel="Timesteps",
+            ylabel="Mean rewards",
+            title="Evalute Rewards Over Timesteps",
+        )
         ax.grid()
         fig.savefig("process.png")
         plt.show()
+
 
 if __name__ == "__main__":
     process = TL(gravity_list=[10.0, 20.0, 30.0], seeds=[2, 6, 1, 7, 8])
