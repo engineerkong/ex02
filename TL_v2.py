@@ -41,7 +41,7 @@ class TL:
         self.seeds = seeds
         self.gamma = 0.99  # Discount factor of reward func
         self.alpha = 1e-3  # Learning rate of DDPG
-        self.sum_episodes = 5000
+        self.sum_episodes = 10000
         self.eval_episodes = 100
         self.eval_freq = 1000
 
@@ -86,7 +86,7 @@ class TL:
                 )
 
                 model = DDPG("MlpPolicy", self.env_train)
-                model.learn(5000, callback=eval_callback)
+                model.learn(self.sum_episodes, callback=eval_callback)
                 results = np.load(f"./gravity_{gravity}/seed_{seed}/evaluations.npz")
                 self.results_list[j].append(np.mean(results["results"], axis=1))
                 self.results_timesteps = results["timesteps"]
@@ -116,7 +116,7 @@ class TL:
                 edgecolor="black",
                 alpha=0.3,
             )
-        plt.legend(plt_list, legend_list, loc=4)
+        plt.legend(plt_list, legend_list, loc=0, prop = {'size':5})
         ax.set(
             xlabel="Timesteps",
             ylabel="Mean rewards",
